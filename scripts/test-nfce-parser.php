@@ -14,6 +14,8 @@ try{
     echo $NFCE->getAddress()."\n";
     echo $NFCE->getTaxes()."\n";
     print_r($NFCE->getItems());
+    echo $NFCE->getIssueDate()."\n";
+    echo $NFCE->getIssueDateTimestamp()."\n";
 
 } catch (Exception $Exception) {
 

@@ -5,6 +5,8 @@ namespace App\Services;
 use \Exception;
 use \DOMDocument;
 use \DOMXPath;
+use \DateTime;
+use \DateTimeZone;
 
 //Nota Fiscal de Consumidor Eletrônica Parser
 
@@ -15,6 +17,8 @@ class NFCE {
     private ?string $Address =  null;
     private ?float $Taxes =  null;
     private ?array $Items =  null;
+    private ?string $IssueDate = null;
+    private ?int $IssueDateTimestamp = null;
 
     public function __construct(string $Path) {
 
@@ -98,6 +102,9 @@ class NFCE {
 
         $Address = trim($Text->item(1)->nodeValue);
         $Tokens = explode(',', $Address);
+
+        if(count($Tokens) == 1)
+            return false;
 
         foreach($Tokens as $Index => $Token){
 
@@ -200,6 +207,39 @@ class NFCE {
 
         $this->Items = $Lines;
 
+        $Details = $XPath->query("//div[contains(@class, 'jqm-collapsible')]");
+
+        if(empty($Details->length))
+            return false;
+
+        $Details = $Details->item(0);
+
+        $Details = $XPath->query(".//ul[contains(@class, 'jqm-listview')]//li", $Details);
+
+        if(empty($Details->length))
+            return false;
+
+        $Details = $Details->item(0);
+
+        $IssueDate = $XPath->query(".//strong[contains(text(), 'Emissão:')]/following-sibling::text()[1]", $Details);
+
+        if(empty($IssueDate->length))
+            return false;
+
+        $IssueDate = $IssueDate->item(0)->nodeValue;
+        $IssueDate = trim($IssueDate);
+
+        $Tokens = explode('-', $IssueDate);
+
+        if(count($Tokens) == 1)
+            return false;
+
+        $this->IssueDate = trim($Tokens[0]);
+
+        $IimeZone = new DateTimeZone('America/Sao_Paulo');
+        $Data = DateTime::createFromFormat('d/m/Y H:i:s', $this->IssueDate, $IimeZone);
+        $this->IssueDateTimestamp = $Data->getTimestamp();
+
         return true;
 
     }
@@ -231,6 +271,18 @@ class NFCE {
     public function getItems() : array {
 
         return $this->Items;
+
+    }
+
+    public function getIssueDate() : string {
+
+        return $this->IssueDate;
+
+    }
+
+    public function getIssueDateTimestamp() : int {
+
+        return $this->IssueDateTimestamp;
 
     }
 
