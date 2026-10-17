@@ -21,6 +21,7 @@
             <file>tests/sequential/user/CreateAlreadyRegisteredUserTest.php</file>
             <file>tests/sequential/user/LoginRegisteredUserTest.php</file>
             <file>tests/sequential/user/LogoutRegisteredUserTest.php</file>
+            <file>tests/sequential/user/GetAlreadyRegisteredUserTest.php</file>
         </testsuite>
         <testsuite name="sequential-common-information-exchange-traded-assets">
             <file>tests/sequential/common-information/exchange-traded-assets/AddCommonInformationExchangeTradedAssetsNoAuthTest.php</file>

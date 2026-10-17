@@ -107,6 +107,35 @@ class UserRepository {
 
     }
 
+    public static function changeUserName(int $ID, string $NewName) : bool {
+
+        try{
+
+            $KernelConnection = DatabaseHelper::getConnection('kernel');
+
+            if(empty($KernelConnection))
+                return false;
+
+            $KernelConnection = new MariaDB('kernel', 'kernel');
+            $Sql = 'UPDATE users SET Name = :Name WHERE ID = :ID';
+            $Stmt = $KernelConnection->prepare($Sql);
+            $Stmt->bindValue(':Name', $NewName);
+            $Stmt->bindValue(':ID', $ID);
+            $Result = $Stmt->execute();
+
+            if($Result)
+                return true;
+
+        }catch (Exception $Exception){
+
+            //add logs hererws
+
+        }
+
+        return false;
+
+    }
+
     public static function retrieveUserDetailsBySID(string $SID) : bool | array  {
 
         $Session = SessionRepository::get($SID, ['UserID']);
