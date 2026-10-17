@@ -14,11 +14,13 @@ try{
         "CREATE TABLE users (
             ID SERIAL PRIMARY KEY,
             Name VARCHAR(255),
+            Identifier VARCHAR(255),
             Email VARCHAR(255) NOT NULL,
             PasswordHash VARCHAR(255) NOT NULL,
             Type ENUM('STANDARD','ADMIN') NOT NULL DEFAULT 'STANDARD',
             CustomerServerID INT NOT NULL
         )",
+        "CREATE INDEX IDX_Identifier ON users (Identifier)",
         "CREATE INDEX IDX_Email ON users (Email)",
         "CREATE TABLE sessions (
             ID SERIAL PRIMARY KEY,

@@ -128,6 +128,7 @@ class OperationController extends UiBase {
 
             $_SESSION['UserID'] = $Result['ID'];
             $_SESSION['UserName'] = $Result['Name'];
+            $_SESSION['UserIdentifier'] = $Result['Identifier'];
             $_SESSION['UserEmail'] = $Result['Email'];
             $_SESSION['UserType'] = $Result['Type'];
             $_SESSION['CustomerServerID'] = $Result['CustomerServerID'];

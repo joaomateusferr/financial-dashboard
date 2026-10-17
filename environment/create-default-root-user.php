@@ -47,6 +47,13 @@ try {
 
     echo "Root name changed!\n";
 
+    $Result = UserRepository::changeUserIdentifier($UserDetails['ID'], $DefaultRootCredentials['Identifier']);
+
+    if(!$Result)
+        exit("User identifier change failed!\n");
+
+    echo "Root identifier changed!\n";
+
 } catch (Exception $Exception) {
 
     echo $Exception->getMessage()."\n";
