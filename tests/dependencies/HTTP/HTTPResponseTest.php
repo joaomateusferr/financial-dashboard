@@ -2,7 +2,10 @@
 
 namespace TestDependencies\HTTP;
 
+require dirname(__DIR__, 3).'/config.php';
+
 use PHPUnit\Framework\TestCase;
+use App\Helpers\APIRequestHelper;
 
 abstract class HTTPResponseTest extends TestCase {
 
@@ -16,35 +19,34 @@ abstract class HTTPResponseTest extends TestCase {
 
     }
 
-    public static function login(string $User, string $Password) : ?string {
+    protected static function getUserAgent(): string {
 
-        $Cookie = null;
-        $Options = [ 'http' => ['user_agent' => 'script','header'  => "Content-type: application/json",'method'  => 'POST', 'content' => json_encode(['Email' => $User, 'Password' => $Password])]];
-        $Result = @file_get_contents(self::getApiBase().'/session', false, stream_context_create($Options));
-
-        if(!empty($Result)){
-
-            foreach($http_response_header as $ResponseHeaderLine){
-
-                if (preg_match('/^Set-Cookie:\s*([^;]+)/i', $ResponseHeaderLine, $Matches)) {
-
-                    $Cookie = $Matches[1];
-                    break;
-
-                }
-
-            }
-
-        }
-
-        return $Cookie;
+        return 'script';
 
     }
 
-    public static function logout(string $Cookie) : bool {
+    public static function login(string $User, string $Password) : ?string {
 
-        $Options = [ 'http' => ['header'  => "Cookie: $Cookie\r\n",'method'  => 'DELETE']];
-        $Result = @file_get_contents(self::getApiBase().'/session', false, stream_context_create($Options));
+        $SID = null;
+
+        $Result = APIRequestHelper::sendRequest(self::getUserAgent(), 'POST','/session',['Email' => $User, 'Password' => $Password],["Content-type: application/json"]);
+
+        if(!empty($Result)){
+
+           $SetCookie = APIRequestHelper::parseSetCookie($Result['Headers']['Set-Cookie']);
+
+            if(!empty($SetCookie['sid']))
+                $SID = 'sid='.$SetCookie['sid'];
+
+        }
+
+        return $SID;
+
+    }
+
+    public static function logout(string $SID) : bool {
+
+        $Result = APIRequestHelper::sendRequest(self::getUserAgent(), 'DELETE','/session',[],["Cookie: ".$SID,"Content-type: application/json"]);
 
         if(!empty($Result))
             return true;

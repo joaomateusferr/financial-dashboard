@@ -6,7 +6,7 @@ use App\Services\B3IncomeReport;
 use App\Services\AssetsClosePrice;
 
 $File = '/home/john/Desktop/b3_dividend_data.xlsx';
-$B3IncomeReport = new B3IncomeReport($File, ['BBDC4' => 'ACAO']);
+$B3IncomeReport = new B3IncomeReport($File, ['BBDC4' => 'ACAO', 'BBSE3' => 'ACAO', 'B3SA3' => 'ACAO', 'WEGE3' => 'ACAO']);
 $Operations = $B3IncomeReport->getOperations();
 
 $AssetsByDate = [];
@@ -51,6 +51,10 @@ $AveragePrice = [
     'ALZR11' => 10.69,
     'XPML11' => 106.22,
     'BBAS3' => 21,69,
+    'BBSE3' => 35,48,
+    'BPAC11' => 46,76,
+    'WEGE3' => 43,73,
+    'VALE3' => 60,38,
 ];
 
 $ExportFields = ['PaymentDate', 'Asset', 'NumberOfShares', 'Earnings', 'Taxes', 'NetEarnings', 'NetEarningsPerShare', 'ClosingPrice' , 'DividendYield', 'AveragePrice', 'NetDividendYieldOnCost', 'Type', 'Brokerage'];
