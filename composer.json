@@ -38,7 +38,8 @@
         "initialize-database":["@initialize-data-structures","@initialize-data-structures-common-information","@initial-data-dump-common-information","@create-default-root-user"],
         "initialize-data-structures": "@php ./environment/initialize-data-structures.php",
         "initialize-data-structures-common-information": "@php ./environment/initialize-data-structures-common-information.php",
-        "initial-data-dump-common-information": "@php ./environment/initial-data-dump-common-information.php"
+        "initial-data-dump-common-information": "@php ./environment/initial-data-dump-common-information.php",
+        "clear-database": "@php ./environment/clear-databases.php"
     },
     "config": {
     "audit": {
