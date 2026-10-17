@@ -11,7 +11,7 @@ final class AddCommonInformationExchangeTradedAssetsNoAssetTypeIDAssetTest exten
 
     public static function setUpBeforeClass(): void {
 
-        $DefaultRootCredentials = UsersConstants::getDefaultRootCredentials();
+        $DefaultRootCredentials = UsersConstants::getDefaultRootData();
         self::$Cookie = self::login($DefaultRootCredentials['Email'], $DefaultRootCredentials['Password']);
 
         $Curl = curl_init();

@@ -8,7 +8,7 @@ use App\Helpers\DatabaseHelper;
 
 try {
 
-    $DefaultRootCredentials = UsersConstants::getDefaultRootCredentials();
+    $DefaultRootCredentials = UsersConstants::getDefaultRootData();
 
     DatabaseHelper::connect('kernel', 'kernel');
 
