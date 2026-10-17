@@ -9,7 +9,7 @@ final class GetAlreadyRegisteredUserTest extends HTTPResponseTest {
 
     public static function setUpBeforeClass(): void {
 
-        $DefaultRootCredentials = UsersConstants::getDefaultRootCredentials();
+        $DefaultRootCredentials = UsersConstants::getDefaultRootData();
         $Cookie = self::login($DefaultRootCredentials['Email'], $DefaultRootCredentials['Password']);
 
         $Curl = curl_init();
@@ -32,7 +32,7 @@ final class GetAlreadyRegisteredUserTest extends HTTPResponseTest {
 
     public function testResponseDefaultExpectedStructure(): void {
 
-        $DefaultRootCredentials = UsersConstants::getDefaultRootCredentials();
+        $DefaultRootCredentials = UsersConstants::getDefaultRootData();
         $ResponseArray = json_decode(self::$Response,true);
         $this->assertFalse(isset($ResponseArray['error']));
         $this->assertTrue(isset($ResponseArray['result']['ID']));

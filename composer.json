@@ -29,15 +29,17 @@
         "phpunit/phpunit": "^12.4"
     },
     "scripts": {
-        "prepare-environment-dev":["@environment-up-dev","@initialize-data-structures","@initialize-data-structures-common-information","@initial-data-dump-common-information","@create-default-root-user"],
-        "prepare-environment":["@environment-up","@initialize-data-structures","@initialize-data-structures-common-information","@initial-data-dump-common-information","@create-default-root-user"],
+        "prepare-environment-dev":["@environment-up-dev","@initialize-database"],
+        "prepare-environment":["@environment-up","@initialize-database"],
         "environment-up": "@php ./environment/environment-up.php",
         "environment-up-dev": "@environment-up DEV",
         "clean-up": "sh ./environment/clean-up-docker-resources.sh",
         "create-default-root-user": "@php ./environment/create-default-root-user.php",
+        "initialize-database":["@initialize-data-structures","@initialize-data-structures-common-information","@initial-data-dump-common-information","@create-default-root-user"],
         "initialize-data-structures": "@php ./environment/initialize-data-structures.php",
         "initialize-data-structures-common-information": "@php ./environment/initialize-data-structures-common-information.php",
-        "initial-data-dump-common-information": "@php ./environment/initial-data-dump-common-information.php"
+        "initial-data-dump-common-information": "@php ./environment/initial-data-dump-common-information.php",
+        "clear-database": "@php ./environment/clear-databases.php"
     },
     "config": {
     "audit": {

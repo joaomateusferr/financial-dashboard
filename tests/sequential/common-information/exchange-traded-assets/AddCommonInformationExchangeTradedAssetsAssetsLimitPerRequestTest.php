@@ -12,7 +12,7 @@ final class AddCommonInformationExchangeTradedAssetsAssetsLimitPerRequestTest ex
 
     public static function setUpBeforeClass(): void {
 
-        $DefaultRootCredentials = UsersConstants::getDefaultRootCredentials();
+        $DefaultRootCredentials = UsersConstants::getDefaultRootData();
         self::$Cookie = self::login($DefaultRootCredentials['Email'], $DefaultRootCredentials['Password']);
 
         $Payload = [
