@@ -6,36 +6,53 @@ use App\Repositories\UserRepository;
 use App\Constants\UsersConstants;
 use App\Helpers\DatabaseHelper;
 
-$DefaultRootCredentials = UsersConstants::getDefaultRootCredentials();
+try {
 
-DatabaseHelper::connect('kernel', 'kernel');
+    $DefaultRootCredentials = UsersConstants::getDefaultRootCredentials();
 
-$UserDetails = UserRepository::retrieveUserDetailsByEmail($DefaultRootCredentials['Email']);
+    DatabaseHelper::connect('kernel', 'kernel');
 
-if(empty($UserDetails)){
+    $UserDetails = UserRepository::retrieveUserDetailsByEmail($DefaultRootCredentials['Email']);
 
-    $Result = UserRepository::create($DefaultRootCredentials['Email'], $DefaultRootCredentials['Password']);
+    if(empty($UserDetails)){
 
-    if(empty($Result))
-        exit("User creation failed!\n");
+        $Result = UserRepository::create($DefaultRootCredentials['Email'], $DefaultRootCredentials['Password']);
 
-    echo "User created successfully!\n";
+        if(empty($Result))
+            exit("User creation failed!\n");
 
-} else {
+        echo "User created successfully!\n";
 
-    echo "Default root user already created\n";
+    } else {
 
-    if($UserDetails['Type'] == 'ADMIN')
-        exit("Default root user already is admin!\n");
+        echo "Default root user already created\n";
+
+        if($UserDetails['Type'] == 'ADMIN')
+            exit("Default root user already is admin!\n");
+
+    }
+
+    $UserDetails = UserRepository::retrieveUserDetailsByEmail($DefaultRootCredentials['Email']);
+    $Result = UserRepository::changeUserType($UserDetails['ID'],'ADMIN');
+
+    if(!$Result)
+        exit("User type change failed!\n");
+
+    echo "Root now is Admin!\n";
+
+    $Result = UserRepository::changeUserName($UserDetails['ID'], $DefaultRootCredentials['Name']);
+
+    if(!$Result)
+        exit("User name change failed!\n");
+
+    echo "Root name changed!\n";
+
+} catch (Exception $Exception) {
+
+    echo $Exception->getMessage()."\n";
+
+} finally {
+
+    DatabaseHelper::disconnect('kernel');
 
 }
-
-$UserDetails = UserRepository::retrieveUserDetailsByEmail($DefaultRootCredentials['Email']);
-$Result = UserRepository::changeUserType($UserDetails['ID'],'ADMIN');
-
-DatabaseHelper::disconnect('kernel');
-
-if(!$Result)
-    exit("User type change failed!\n");
-
-echo "Root now is Admin!\n";
