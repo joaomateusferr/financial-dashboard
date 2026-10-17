@@ -6,7 +6,7 @@ class UsersConstants {
 
     private const DefaultType = 'STANDARD';
     private const SupportedTypes = ['STANDARD','ADMIN'];
-    private const DefaultRootData = ['Email' => 'root@admin.root','Password' => 'RootPassword!', 'Name' => 'Root'];
+    private const DefaultRootData = ['Email' => 'root@admin.root','Password' => 'RootPassword!', 'Name' => 'Root', 'Identifier' => 'root'];
 
     public static function getDefaultType() {
 

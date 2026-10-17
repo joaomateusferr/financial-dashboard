@@ -38,6 +38,8 @@ final class GetAlreadyRegisteredUserTest extends HTTPResponseTest {
         $this->assertTrue(isset($ResponseArray['result']['ID']));
         $this->assertTrue(isset($ResponseArray['result']['Name']));
         $this->assertSame($ResponseArray['result']['Name'], $DefaultRootCredentials['Name']);
+        $this->assertTrue(isset($ResponseArray['result']['Identifier']));
+        $this->assertSame($ResponseArray['result']['Identifier'], $DefaultRootCredentials['Identifier']);
         $this->assertTrue(isset($ResponseArray['result']['Email']));
         $this->assertSame($ResponseArray['result']['Email'], $DefaultRootCredentials['Email']);
         $this->assertTrue(isset($ResponseArray['result']['Type']));

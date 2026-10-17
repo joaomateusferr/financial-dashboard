@@ -116,7 +116,6 @@ class UserRepository {
             if(empty($KernelConnection))
                 return false;
 
-            $KernelConnection = new MariaDB('kernel', 'kernel');
             $Sql = 'UPDATE users SET Name = :Name WHERE ID = :ID';
             $Stmt = $KernelConnection->prepare($Sql);
             $Stmt->bindValue(':Name', $NewName);
@@ -136,10 +135,38 @@ class UserRepository {
 
     }
 
+    public static function changeUserIdentifier(int $ID, string $NewIdentifier) : bool {
+
+        try{
+
+            $KernelConnection = DatabaseHelper::getConnection('kernel');
+
+            if(empty($KernelConnection))
+                return false;
+
+            $Sql = 'UPDATE users SET Identifier = :Identifier WHERE ID = :ID';
+            $Stmt = $KernelConnection->prepare($Sql);
+            $Stmt->bindValue(':Identifier', $NewIdentifier);
+            $Stmt->bindValue(':ID', $ID);
+            $Result = $Stmt->execute();
+
+            if($Result)
+                return true;
+
+        }catch (Exception $Exception){
+
+            //add logs hererws
+
+        }
+
+        return false;
+
+    }
+
     public static function retrieveUserDetailsBySID(string $SID) : bool | array  {
 
         $Session = SessionRepository::get($SID, ['UserID']);
-        $UserDetails = self::retrieveUserDetailsByID($Session['UserID'], ['ID', 'Name', 'Email', 'Type', 'CustomerServerID']);
+        $UserDetails = self::retrieveUserDetailsByID($Session['UserID'], ['ID', 'Name', 'Identifier', 'Email', 'Type', 'CustomerServerID']);
         return $UserDetails;
 
     }
