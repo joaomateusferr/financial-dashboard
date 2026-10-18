@@ -116,6 +116,7 @@ $EnvVariables = [
     'JWT_KEY' => $JwtKey,
     'API_BASE_URL' => 'http://localhost:8888', //default value for the development environment
     'UI_API_REQUEST_TIMEOUT' => 5,
+    'LOG_FILES_PATH' => '/logs',
 ];
 
 $EnvContent = '';
