@@ -67,12 +67,9 @@ class Log {
 
     private static function formatBacktrace(array $Backtrace) : array {
 
-        $Backtrace = array_reverse($Backtrace);
-
         foreach($Backtrace as $Index => $Line){
 
-            $Position = $Index + 1;
-            $Backtrace[$Index] = $Position.') '.$Line['class'].$Line['type'].$Line['function'].' -> '.$Line['file'].'('.$Line['line'].')';
+            $Backtrace[$Index] = $Index.') '.$Line['class'].$Line['type'].$Line['function'].' -> '.$Line['file'].'('.$Line['line'].')';
 
         }
 
