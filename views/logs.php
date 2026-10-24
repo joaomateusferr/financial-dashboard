@@ -21,7 +21,7 @@ if(empty($Date)){
 }
 
 $Logs = Log::search($Date, $Host, $Identifier, $Level, $Message);
-
+$Filter = http_build_query(['Date' => $Date, 'Host' => $Host, 'Identifier' => $Identifier, 'Level' => $Level, 'Message' => $Message]);
 ?>
 
 <style>
@@ -114,21 +114,29 @@ $Logs = Log::search($Date, $Host, $Identifier, $Level, $Message);
             <div class="logs-list-header" aria-hidden="true"><span>Log identifier</span><span>Entries</span><span>Last modified</span></div>
 
             <div class="logs-list" aria-label="Log identifiers">
-                <div class="log-row"><button class="log-identifier" type="button">api-exceptions</button><div class="log-count">1,284 <span>logs</span></div><time class="log-date" datetime="2026-10-19T14:42:00-03:00">2026-10-19 · 14:42</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">transaction-ai-categorization</button><div class="log-count">846 <span>logs</span></div><time class="log-date" datetime="2026-10-19T11:18:00-03:00">2026-10-19 · 11:18</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">create-user</button><div class="log-count">392 <span>logs</span></div><time class="log-date" datetime="2026-10-18T16:05:00-03:00">2026-10-18 · 16:05</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">assets-close-price</button><div class="log-count">217 <span>logs</span></div><time class="log-date" datetime="2026-10-17T09:31:00-03:00">2026-10-17 · 09:31</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">change-user-name</button><div class="log-count">74 <span>logs</span></div><time class="log-date" datetime="2026-10-15T18:47:00-03:00">2026-10-15 · 18:47</time></div>
-                 <div class="log-row"><button class="log-identifier" type="button">api-exceptions</button><div class="log-count">1,284 <span>logs</span></div><time class="log-date" datetime="2026-10-19T14:42:00-03:00">2026-10-19 · 14:42</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">transaction-ai-categorization</button><div class="log-count">846 <span>logs</span></div><time class="log-date" datetime="2026-10-19T11:18:00-03:00">2026-10-19 · 11:18</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">create-user</button><div class="log-count">392 <span>logs</span></div><time class="log-date" datetime="2026-10-18T16:05:00-03:00">2026-10-18 · 16:05</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">assets-close-price</button><div class="log-count">217 <span>logs</span></div><time class="log-date" datetime="2026-10-17T09:31:00-03:00">2026-10-17 · 09:31</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">change-user-name</button><div class="log-count">74 <span>logs</span></div><time class="log-date" datetime="2026-10-15T18:47:00-03:00">2026-10-15 · 18:47</time></div>
-                 <div class="log-row"><button class="log-identifier" type="button">api-exceptions</button><div class="log-count">1,284 <span>logs</span></div><time class="log-date" datetime="2026-10-19T14:42:00-03:00">2026-10-19 · 14:42</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">transaction-ai-categorization</button><div class="log-count">846 <span>logs</span></div><time class="log-date" datetime="2026-10-19T11:18:00-03:00">2026-10-19 · 11:18</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">create-user</button><div class="log-count">392 <span>logs</span></div><time class="log-date" datetime="2026-10-18T16:05:00-03:00">2026-10-18 · 16:05</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">assets-close-price</button><div class="log-count">217 <span>logs</span></div><time class="log-date" datetime="2026-10-17T09:31:00-03:00">2026-10-17 · 09:31</time></div>
-                <div class="log-row"><button class="log-identifier" type="button">change-user-name</button><div class="log-count">74 <span>logs</span></div><time class="log-date" datetime="2026-10-15T18:47:00-03:00">2026-10-15 · 18:47</time></div>
+
+                <?php
+
+                foreach($Logs as $Identifier => $Lines){ 
+
+                    $DateTime = new DateTimeImmutable($Lines[0]['datetime']);
+                    $Date = $DateTime->format('Y-m-d');
+                    $Time = $DateTime->format('H:i:s');
+                    
+                    ?>
+
+                    <div class="log-row">
+                        <button onclick="window.location.href='/logs-list?<?php echo $Filter ?>';" class="log-identifier" type="button"><?php echo $Identifier ?></button>
+                        <div class="log-count">
+                            <?php echo count($Lines) ?>
+                        </div>
+                        <time class="log-date"> <?php echo $Date.' - '.$Time?></time>
+                    </div>
+
+                    <?php
+
+                } ?>
+                
             </div>
 
             <div class="logs-list-footer">Showing 5 log identifiers · Sorted by last modified</div>
