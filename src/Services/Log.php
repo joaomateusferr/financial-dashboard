@@ -59,6 +59,23 @@ class Log {
 
         }
 
+        $Hostname = gethostname();
+
+        if(!empty($Hostname)){
+
+            $Logger->pushProcessor(
+
+                function (LogRecord $Record) use ($Hostname): LogRecord {
+
+                    $Record->extra['hostname'] = $Hostname;
+                    return $Record;
+
+                }
+
+            );
+
+        }
+
         $Logger->$Level($Message, $Context);
 
         return true;
@@ -74,6 +91,90 @@ class Log {
         }
 
         return $Backtrace;
+
+    }
+
+    private static function getMostRecentLogFilePath() : string {
+
+        $LogFolder = $_SERVER['PROJECT_ROOT'].$_SERVER['LOG_FILES_PATH'].'/';
+
+        $Files = glob("$LogFolder*.log*");
+
+        if(empty($Files))
+            return '';
+
+        return $Files[array_key_last($Files)];
+
+    }
+
+    public static function getMostRecentLogDate() : string {
+
+        $MostRecentLogFilePath = self::getMostRecentLogFilePath();
+
+        if(empty($MostRecentLogFilePath))
+            return '';
+
+        return pathinfo($MostRecentLogFilePath, PATHINFO_FILENAME);
+
+    }
+
+    public static function getLogLevels() : array {
+
+        $LogLevels = [];
+
+        foreach(Level::NAMES as $Index => $Name)
+            $LogLevels[Level::VALUES[$Index]] = $Name;
+
+        return $LogLevels;
+
+    }
+
+    public static function search(string $Date, string $Host, string $Identifier, int $Level, string $Message) : array {
+
+        $LogFile = $_SERVER['PROJECT_ROOT'].$_SERVER['LOG_FILES_PATH'].'/'.$Date.'.log';
+
+        if(!file_exists($LogFile))
+            return [];
+
+        $Logs = [];
+
+        $Lines = file($LogFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        foreach($Lines as $Index => $Line){
+
+            if(!json_validate($Line))
+                continue;
+
+            $Line = json_decode($Line, true);
+
+            if (!empty($Host) && (empty($Line['extra']['hostname']) || $Line['extra']['hostname'] != $Host))
+                continue;
+
+            if(!empty($Identifier) && $Line['channel'] != $Identifier)
+                continue;
+
+            if(!empty($Level) && $Line['level'] != $Level)
+                continue;
+
+            $Channel = $Line['channel'];
+
+            unset($Line['channel']);
+
+            $Logs[$Channel][] = $Line;
+
+            unset($Lines[$Index]);
+
+        }
+
+        unset($Lines);
+
+        foreach($Logs as $Channel => $logs){
+
+            $Logs[$Channel] = array_reverse($Logs[$Channel]);
+
+        }
+
+        return $Logs;
 
     }
 

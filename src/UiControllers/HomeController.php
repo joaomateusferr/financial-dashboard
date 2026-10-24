@@ -8,6 +8,18 @@ use App\Services\UiBase;
 
 class HomeController extends UiBase {
 
+    public function logs(Request $Request, Response $Response) {
+
+        return self::buildResponse($Response, 'logs.php');
+
+    }
+
+    public function logsList(Request $Request, Response $Response) {
+
+        return self::buildResponse($Response, 'logs-list.php');
+
+    }
+
     public function signin(Request $Request, Response $Response) {
 
         return self::buildResponse($Response, 'signin.php');
