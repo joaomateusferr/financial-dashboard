@@ -153,7 +153,10 @@ class Log {
             if(!empty($Identifier) && $Line['channel'] != $Identifier)
                 continue;
 
-            if(!empty($Level) && $Line['level'] != $Level)
+            if(!empty($Level) && $Line['level'] < $Level)
+                continue;
+
+            if(!empty($Message) && !str_contains($Line['message'], $Message))
                 continue;
 
             $Channel = $Line['channel'];
