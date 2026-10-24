@@ -139,7 +139,7 @@ $Filter = http_build_query(['Date' => $Date, 'Host' => $Host, 'Identifier' => $I
                 
             </div>
 
-            <div class="logs-list-footer">Showing 5 log identifiers · Sorted by last modified</div>
+            <div class="logs-list-footer">Showing <?php echo count($Logs) ?> log identifiers · Sorted by last modified</div>
         </div>
     </div>
 </section>
