@@ -36,6 +36,8 @@ $Filter = ['Date' => $Date, 'Host' => $Host, 'Identifier' => $Identifier, 'Level
     .logs-summary { margin: 8px 0 0; color: color-mix(in srgb, var(--text-color) 64%, transparent); font-size: .92rem; }
     .logs-status { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 999px; color: color-mix(in srgb, var(--text-color) 68%, transparent); font-size: .78rem; font-weight: 650; white-space: nowrap; }
     .logs-status::before { width: 7px; height: 7px; border-radius: 50%; background: #33a36b; content: ""; }
+    .logs-status.success::before { background: #33a36b; }
+    .logs-status.error::before { background: #dc3545; }
     .logs-panel { margin: 0 8px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--border-color) 88%, var(--text-color)); border-radius: 10px; background: var(--sidebar-bg); }
     .logs-filters { position: sticky; top: 0; z-index: 2; display: grid; grid-template-columns: 1fr 1.15fr 1.15fr .9fr 1.45fr auto; align-items: end; gap: 14px; padding: 20px; border-bottom: 1px solid var(--border-color); background: color-mix(in srgb, var(--bg-color) 96%, var(--sidebar-bg)); }
     .logs-field { display: grid; gap: 7px; }
@@ -68,7 +70,7 @@ $Filter = ['Date' => $Date, 'Host' => $Host, 'Identifier' => $Identifier, 'Level
                 <h2 class="logs-heading">Log consultation</h2>
                 <p class="logs-summary">Search, review and access your application log groups.</p>
             </div>
-            <div class="logs-status">Log service available</div>
+            <div class="logs-status success">Log service available</div>
         </div>
 
         <div class="logs-panel">
