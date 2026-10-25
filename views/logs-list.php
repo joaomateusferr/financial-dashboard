@@ -23,6 +23,8 @@ $Logs = isset($Logs[$Identifier]) ? $Logs[$Identifier] : [];
     .log-details-eyebrow { margin: 0 0 8px; color: var(--primary); font-size: .75rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
     .log-details-heading { margin: 0; color: var(--text-color); font-size: clamp(1.45rem, 2vw, 1.85rem); letter-spacing: -.025em; }
     .log-details-summary { margin: 8px 0 0; color: color-mix(in srgb, var(--text-color) 64%, transparent); font-size: .92rem; }
+    .log-details-back-button { display: inline-flex; align-items: center; min-height: 36px; margin-top: 16px; padding: .5rem .8rem; border: 1px solid #198754; border-radius: 8px; background: #198754; color: #fff; font: inherit; font-size: .78rem; font-weight: 700; text-decoration: none; white-space: nowrap; transition: border-color .2s, color .2s, background .2s; }
+    .log-details-back-button:hover { border-color: #146c43; background: #146c43; color: #fff; }
     .log-details-context { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 999px; color: color-mix(in srgb, var(--text-color) 68%, transparent); font-size: .78rem; font-weight: 650; white-space: nowrap; }
     .log-details-panel { margin: 0 8px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--border-color) 88%, var(--text-color)); border-radius: 10px; background: var(--sidebar-bg); }
     .log-details-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; border-bottom: 1px solid var(--border-color); background: color-mix(in srgb, var(--bg-color) 96%, var(--sidebar-bg)); }
@@ -77,6 +79,7 @@ $Logs = isset($Logs[$Identifier]) ? $Logs[$Identifier] : [];
                 <p class="log-details-eyebrow">System observability</p>
                 <h2 class="log-details-heading">Log entries</h2>
                 <p class="log-details-summary">Detailed records from the selected application log.</p>
+                <a class="log-details-back-button" href="/logs">Back to logs</a>
             </div>
             <div class="log-details-context"><?php echo $Identifier; ?></div>
         </div>
