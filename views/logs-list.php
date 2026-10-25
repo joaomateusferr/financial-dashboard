@@ -1,3 +1,17 @@
+<?php
+
+use App\Services\Log;
+
+$Level = !empty($_GET['Level']) ? (int) $_GET['Level'] : 100;
+$Host = !empty($_GET['Host']) ? $_GET['Host'] : '';
+$Identifier = !empty($_GET['Identifier']) ? $_GET['Identifier'] : '';
+$Message = !empty($_GET['Message']) ? $_GET['Message'] : '';
+$Date = !empty($_GET['Date']) ? $_GET['Date'] : '';
+
+$Logs = Log::search($Date, $Host, $Identifier, $Level, $Message);
+$Logs = isset($Logs[$Identifier]) ? $Logs[$Identifier] : [];
+
+?>
 <style>
     body:has(.log-details-shell) { overflow: auto; }
     .app:has(.log-details-shell) { height: auto; min-height: 100vh; }
@@ -10,7 +24,6 @@
     .log-details-heading { margin: 0; color: var(--text-color); font-size: clamp(1.45rem, 2vw, 1.85rem); letter-spacing: -.025em; }
     .log-details-summary { margin: 8px 0 0; color: color-mix(in srgb, var(--text-color) 64%, transparent); font-size: .92rem; }
     .log-details-context { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 999px; color: color-mix(in srgb, var(--text-color) 68%, transparent); font-size: .78rem; font-weight: 650; white-space: nowrap; }
-    .log-details-context::before { width: 7px; height: 7px; border-radius: 50%; background: var(--primary); content: ""; }
     .log-details-panel { margin: 0 8px; overflow: hidden; border: 1px solid color-mix(in srgb, var(--border-color) 88%, var(--text-color)); border-radius: 10px; background: var(--sidebar-bg); }
     .log-details-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 20px; border-bottom: 1px solid var(--border-color); background: color-mix(in srgb, var(--bg-color) 96%, var(--sidebar-bg)); }
     .log-details-toolbar-title { margin: 0; color: var(--text-color); font-size: .9rem; font-weight: 750; }
@@ -65,13 +78,13 @@
                 <h2 class="log-details-heading">Log entries</h2>
                 <p class="log-details-summary">Detailed records from the selected application log.</p>
             </div>
-            <div class="log-details-context">api-exceptions</div>
+            <div class="log-details-context"><?php echo $Identifier; ?></div>
         </div>
 
         <div class="log-details-panel">
             <div class="log-details-toolbar">
                 <p class="log-details-toolbar-title">Recent entries</p>
-                <span class="log-details-toolbar-meta">Showing 5 records</span>
+                <span class="log-details-toolbar-meta">Showing <?php echo count($Logs); ?> records</span>
             </div>
 
             <div class="log-details-table-wrap">
@@ -84,116 +97,95 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="log-details-date"><time datetime="2026-10-19T14:42:18-03:00">2026-10-19</time><span>14:42:18</span></td>
-                            <td class="log-details-message">Uncaught RuntimeException: Unable to complete request processing. The upstream service returned an unexpected response. bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
-                                <div class="log-details-actions"><button class="log-details-action js-view-backtrace" type="button" aria-expanded="false">View Backtrace</button><button class="log-details-action js-view-details" type="button" aria-expanded="false">View Details</button></div>
-                                <div class="log-details-backtrace">#0 /app/src/Services/ApiClient.php(184): ApiClient-&gt;request()
-#1 /app/src/Controllers/TransactionController.php(72): ApiClient-&gt;syncTransactions() aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-#2 /app/public/index.php(38): TransactionController-&gt;handle()
-#3 {main}</div>
-                                <div class="log-details-extra">
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Level</span><span class="log-details-extra-value">ERROR</span></div>
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Request ID</span><span class="log-details-extra-value">req_7f3a91c2</span></div>
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Environment</span><span class="log-details-extra-value">production</span></div>
-                                </div>
-                            </td>
-                            <td class="log-details-host">api-server-01</td>
-                        </tr>
-                        <tr class="log-details-expanded-row"><td class="log-details-expanded-cell" colspan="3"><div class="log-details-expanded-content"><div class="log-details-backtrace">#0 /app/src/Services/ApiClient.php(184): ApiClient-&gt;request()
-#1 /app/src/Controllers/TransactionController.php(72): ApiClient-&gt;syncTransactions()
-#2 /app/public/index.php(38): TransactionController-&gt;handle()
-#3 {main}</div><div class="log-details-extra"><div class="log-details-extra-item"><span class="log-details-extra-label">Level</span><span class="log-details-extra-value">ERROR</span></div><div class="log-details-extra-item"><span class="log-details-extra-label">Request ID</span><span class="log-details-extra-value">req_7f3a91c2</span></div><div class="log-details-extra-item"><span class="log-details-extra-label">Environment</span><span class="log-details-extra-value">production</span></div></div></div></td></tr>
-                        <tr>
-                            <td class="log-details-date"><time datetime="2026-10-19T14:39:06-03:00">2026-10-19</time><span>14:39:06</span></td>
-                            <td class="log-details-message">Request timeout while connecting to the transaction provider after 30 seconds.
-                                <div class="log-details-actions"><button class="log-details-action js-view-backtrace" type="button" aria-expanded="false">View Backtrace</button><button class="log-details-action js-view-details" type="button" aria-expanded="false">View Details</button></div>
-                                <div class="log-details-backtrace">#0 /app/src/Services/TransactionProvider.php(96): TransactionProvider-&gt;connect()
-#1 /app/src/Services/TransactionSync.php(41): TransactionProvider-&gt;fetch()
-#2 /app/src/Jobs/SyncTransactionsJob.php(29): TransactionSync-&gt;run()
-#3 {main}</div>
-                                <div class="log-details-extra">
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Level</span><span class="log-details-extra-value">ERROR</span></div>
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Request ID</span><span class="log-details-extra-value">req_7f3a8db4</span></div>
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Environment</span><span class="log-details-extra-value">production</span></div>
-                                </div>
-                            </td>
-                            <td class="log-details-host">worker-queue-02</td>
-                        </tr>
-                        <tr class="log-details-expanded-row"><td class="log-details-expanded-cell" colspan="3"><div class="log-details-expanded-content"><div class="log-details-backtrace">#0 /app/src/Services/TransactionProvider.php(96): TransactionProvider-&gt;connect()
-#1 /app/src/Services/TransactionSync.php(41): TransactionProvider-&gt;fetch()
-#2 /app/src/Jobs/SyncTransactionsJob.php(29): SyncTransactionsJob-&gt;run()
-#3 {main}</div><div class="log-details-extra"><div class="log-details-extra-item"><span class="log-details-extra-label">Level</span><span class="log-details-extra-value">ERROR</span></div><div class="log-details-extra-item"><span class="log-details-extra-label">Request ID</span><span class="log-details-extra-value">req_7f3a8db4</span></div><div class="log-details-extra-item"><span class="log-details-extra-label">Environment</span><span class="log-details-extra-value">production</span></div></div></div></td></tr>
-                        <tr>
-                            <td class="log-details-date"><time datetime="2026-10-19T14:31:44-03:00">2026-10-19</time><span>14:31:44</span></td>
-                            <td class="log-details-message">Invalid response payload received while synchronizing account data. Field "transaction_id" was missing from the response.
-                                <div class="log-details-actions"><button class="log-details-action js-view-backtrace" type="button" aria-expanded="false">View Backtrace</button><button class="log-details-action js-view-details" type="button" aria-expanded="false">View Details</button></div>
-                                <div class="log-details-backtrace">#0 /app/src/Services/AccountSync.php(118): AccountSync-&gt;validatePayload()
-#1 /app/src/Controllers/AccountController.php(64): AccountSync-&gt;sync()
-#2 /app/public/index.php(38): AccountController-&gt;update()
-#3 {main}</div>
-                                <div class="log-details-extra">
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Level</span><span class="log-details-extra-value">WARNING</span></div>
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Request ID</span><span class="log-details-extra-value">req_7f3a7ca8</span></div>
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Environment</span><span class="log-details-extra-value">production</span></div>
-                                </div>
-                            </td>
-                            <td class="log-details-host">api-server-02</td>
-                        </tr>
-                        <tr class="log-details-expanded-row"><td class="log-details-expanded-cell" colspan="3"><div class="log-details-expanded-content"><div class="log-details-backtrace">#0 /app/src/Services/AccountSync.php(118): AccountSync-&gt;validatePayload()
-#1 /app/src/Controllers/AccountController.php(64): AccountSync-&gt;sync()
-#2 /app/public/index.php(38): AccountController-&gt;update()
-#3 {main}</div><div class="log-details-extra"><div class="log-details-extra-item"><span class="log-details-extra-label">Level</span><span class="log-details-extra-value">WARNING</span></div><div class="log-details-extra-item"><span class="log-details-extra-label">Request ID</span><span class="log-details-extra-value">req_7f3a7ca8</span></div><div class="log-details-extra-item"><span class="log-details-extra-label">Environment</span><span class="log-details-extra-value">production</span></div></div></div></td></tr>
-                        <tr>
-                            <td class="log-details-date"><time datetime="2026-10-19T14:18:52-03:00">2026-10-19</time><span>14:18:52</span></td>
-                            <td class="log-details-message">Failed to persist categorized transaction. A database constraint prevented the operation from being completed.
-                                <div class="log-details-actions"><button class="log-details-action js-view-backtrace" type="button" aria-expanded="false">View Backtrace</button><button class="log-details-action js-view-details" type="button" aria-expanded="false">View Details</button></div>
-                                <div class="log-details-backtrace">#0 /app/src/Repositories/TransactionRepository.php(207): PDOStatement-&gt;execute()
-#1 /app/src/Services/TransactionService.php(151): TransactionRepository-&gt;save()
-#2 /app/src/Controllers/TransactionController.php(91): TransactionService-&gt;store()
-#3 {main}</div>
-                                <div class="log-details-extra">
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Level</span><span class="log-details-extra-value">ERROR</span></div>
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Request ID</span><span class="log-details-extra-value">req_7f3a5e10</span></div>
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Environment</span><span class="log-details-extra-value">production</span></div>
-                                </div>
-                            </td>
-                            <td class="log-details-host">database-01</td>
-                        </tr>
-                        <tr class="log-details-expanded-row"><td class="log-details-expanded-cell" colspan="3"><div class="log-details-expanded-content"><div class="log-details-backtrace">#0 /app/src/Repositories/TransactionRepository.php(207): PDOStatement-&gt;execute()
-#1 /app/src/Services/TransactionService.php(151): TransactionRepository-&gt;save()
-#2 /app/src/Controllers/TransactionController.php(91): TransactionService-&gt;store()
-#3 {main}</div><div class="log-details-extra"><div class="log-details-extra-item"><span class="log-details-extra-label">Level</span><span class="log-details-extra-value">ERROR</span></div><div class="log-details-extra-item"><span class="log-details-extra-label">Request ID</span><span class="log-details-extra-value">req_7f3a5e10</span></div><div class="log-details-extra-item"><span class="log-details-extra-label">Environment</span><span class="log-details-extra-value">production</span></div></div></div></td></tr>
-                        <tr>
-                            <td class="log-details-date"><time datetime="2026-10-19T13:57:20-03:00">2026-10-19</time><span>13:57:20</span></td>
-                            <td class="log-details-message">Authentication token could not be refreshed because the identity provider was temporarily unavailable.
-                                <div class="log-details-actions"><button class="log-details-action js-view-backtrace" type="button" aria-expanded="false">View Backtrace</button><button class="log-details-action js-view-details" type="button" aria-expanded="false">View Details</button></div>
-                                <div class="log-details-backtrace">#0 /app/src/Services/IdentityProvider.php(82): IdentityProvider-&gt;refreshToken()
-#1 /app/src/Middlewares/AuthMiddleware.php(44): IdentityProvider-&gt;authenticate()
-#2 /app/public/index.php(24): AuthMiddleware-&gt;handle()
-#3 {main}</div>
-                                <div class="log-details-extra">
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Level</span><span class="log-details-extra-value">WARNING</span></div>
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Request ID</span><span class="log-details-extra-value">req_7f3a4a76</span></div>
-                                    <div class="log-details-extra-item"><span class="log-details-extra-label">Environment</span><span class="log-details-extra-value">production</span></div>
-                                </div>
-                            </td>
-                            <td class="log-details-host">auth-server-01</td>
-                        </tr>
-                        <tr class="log-details-expanded-row"><td class="log-details-expanded-cell" colspan="3"><div class="log-details-expanded-content"><div class="log-details-backtrace">#0 /app/src/Services/IdentityProvider.php(82): IdentityProvider-&gt;refreshToken()
-#1 /app/src/Middlewares/AuthMiddleware.php(44): IdentityProvider-&gt;authenticate()
-#2 /app/public/index.php(24): AuthMiddleware-&gt;handle()
-#3 {main}</div><div class="log-details-extra"><div class="log-details-extra-item"><span class="log-details-extra-label">Level</span><span class="log-details-extra-value">WARNING</span></div><div class="log-details-extra-item"><span class="log-details-extra-label">Request ID</span><span class="log-details-extra-value">req_7f3a4a76</span></div><div class="log-details-extra-item"><span class="log-details-extra-label">Environment</span><span class="log-details-extra-value">production</span></div></div></div></td></tr>
+                        <?php if(empty($Logs)) { ?>
+                            <tr>
+                                <td class="log-details-message" colspan="3">No log entries found for the selected filters.</td>
+                            </tr>
+                        <?php } ?>
+
+                        <?php foreach($Logs as $Index => $Log) {
+
+                            $DateTime = new DateTimeImmutable($Log['datetime']);
+                            $Date = $DateTime->format('Y-m-d');
+                            $Time = $DateTime->format('H:i:s');
+
+                            $Backtrace = '';
+
+                            if(!empty($Log['context']['stack_trace'])){ //prioritize the context trace if it exists
+
+                                foreach($Log['context']['stack_trace'] as $Line){
+                                    $Backtrace .= $Line."<br>";
+                                }
+
+                                unset($Logs[$Index]['context']['stack_trace']);
+                                unset($Logs[$Index]['extra']['backtrace']);
+
+                            }elseif(!empty($Log['extra']['backtrace'])){
+
+                                foreach($Log['extra']['backtrace'] as $Line){
+                                    $Backtrace .= $Line."<br>";
+                                }
+
+                                unset($Logs[$Index]['extra']['backtrace']);
+
+                            }
+
+                            ?>
+                            <tr>
+                                <td class="log-details-date">
+                                    <time datetime="<?php echo $Log['datetime']; ?>"><?php echo $Date; ?></time>
+                                    <span><?php echo $Time; ?></span>
+                                </td>
+
+                                <td class="log-details-message"><?php echo $Log['message']; ?>
+                                    <div class="log-details-actions">
+                                        <?php if(!empty($Backtrace)): ?><button class="log-details-action js-view-backtrace" type="button" aria-expanded="false">View Backtrace</button><?php endif; ?>
+                                        <button class="log-details-action js-view-details" type="button" aria-expanded="false">View Details</button>
+                                    </div>
+                                </td>
+                                <td class="log-details-host"><?php echo !empty($Log['extra']['hostname']) ? $Log['extra']['hostname'] : '-'; ?></td>
+                            </tr>
+                            <tr class="log-details-expanded-row">
+                                <td class="log-details-expanded-cell" colspan="3">
+                                    <div class="log-details-expanded-content">
+                                        <?php if(!empty($Backtrace)){ ?>
+                                            <div class="log-details-backtrace"><?php echo $Backtrace; ?></div>
+                                        <?php } ?>
+                                        <div class="log-details-extra">
+
+                                            <div class="log-details-extra-item">
+                                                <span class="log-details-extra-label"><?php echo 'Level'; ?></span>
+                                                <span class="log-details-extra-value"><?php echo $Logs[$Index]['level_name'].' ('.$Logs[$Index]['level'].')'; ?></span>
+                                            </div>
+
+                                            <?php foreach($Logs[$Index]['context'] as $Key => $Value) {
+
+                                                $Value = is_array($Value) ? '<pre>'.json_encode($Value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES).'</pre>' : $Value;
+
+                                                ?>
+
+                                                <div class="log-details-extra-item">
+                                                    <span class="log-details-extra-label"><?php echo $Key; ?></span>
+                                                    <span class="log-details-extra-value"><?php echo $Value; ?></span>
+                                                </div>
+
+                                            <?php } ?>
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     </tbody>
                 </table>
             </div>
 
             <div class="log-details-footer">
-                <span>Sorted by date · newest entries first</span>
-                <nav class="log-details-pagination" aria-label="Log pages">
+                <span><?php echo $Date; ?> · Sorted by date · newest entries first</span>
+                <!--<nav class="log-details-pagination" aria-label="Log pages">
                     <button class="log-details-page-button is-disabled" type="button">Previous</button>
                     <button class="log-details-page-button" type="button">Next</button>
-                </nav>
+                </nav>-->
             </div>
         </div>
     </div>

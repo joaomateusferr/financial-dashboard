@@ -8,7 +8,6 @@ $Level = !empty($_GET['Level']) ? (int) $_GET['Level'] : 100;
 $Host = !empty($_GET['Host']) ? $_GET['Host'] : '';
 $Identifier = !empty($_GET['Identifier']) ? $_GET['Identifier'] : '';
 $Message = !empty($_GET['Message']) ? $_GET['Message'] : '';
-
 $Date = !empty($_GET['Date']) ? $_GET['Date'] : '';
 
 if(empty($Date)){
@@ -21,7 +20,7 @@ if(empty($Date)){
 }
 
 $Logs = Log::search($Date, $Host, $Identifier, $Level, $Message);
-$Filter = http_build_query(['Date' => $Date, 'Host' => $Host, 'Identifier' => $Identifier, 'Level' => $Level, 'Message' => $Message]);
+$Filter = ['Date' => $Date, 'Host' => $Host, 'Identifier' => $Identifier, 'Level' => $Level, 'Message' => $Message];
 ?>
 
 <style>
@@ -77,15 +76,15 @@ $Filter = http_build_query(['Date' => $Date, 'Host' => $Host, 'Identifier' => $I
 
                 <div class="logs-field">
                     <label for="Date">Date</label>
-                    <input id="Date" name="Date" value="<?php echo $Date ?>" type="text" inputmode="numeric" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off">
+                    <input id="Date" name="Date" value="<?php echo $Date; ?>" type="text" inputmode="numeric" maxlength="10" placeholder="YYYY-MM-DD" autocomplete="off">
                 </div>
                 <div class="logs-field">
                     <label for="Host">Host</label>
-                    <input id="Host" name="Host" value="<?php echo $Host ?>" type="text" placeholder="server-name">
+                    <input id="Host" name="Host" value="<?php echo $Host; ?>" type="text" placeholder="server-name">
                 </div>
                 <div class="logs-field">
                     <label for="Identifier">Identifier</label>
-                    <input id="Identifier" name="Identifier" value="<?php echo $Identifier ?>" type="text" placeholder="identifier">
+                    <input id="Identifier" name="Identifier" value="<?php echo $Identifier; ?>" type="text" placeholder="identifier">
                 </div>
                 <div class="logs-field">
                     <label for="Level">Level</label>
@@ -106,7 +105,7 @@ $Filter = http_build_query(['Date' => $Date, 'Host' => $Host, 'Identifier' => $I
                 </div>
                 <div class="logs-field">
                     <label for="Message">Message</label>
-                    <input id="Message" name="Message" value="<?php echo $Message ?>" type="search" placeholder="Search in log messages">
+                    <input id="Message" name="Message" value="<?php echo $Message; ?>" type="search" placeholder="Search in log messages">
                 </div>
                 <button class="logs-search" type="submit">Search logs</button>
             </form>
@@ -117,29 +116,31 @@ $Filter = http_build_query(['Date' => $Date, 'Host' => $Host, 'Identifier' => $I
 
                 <?php
 
-                foreach($Logs as $Identifier => $Lines){ 
+                foreach($Logs as $Identifier => $Lines){
 
                     $DateTime = new DateTimeImmutable($Lines[0]['datetime']);
                     $Date = $DateTime->format('Y-m-d');
                     $Time = $DateTime->format('H:i:s');
-                    
+                    $Query = $Filter;
+                    $Query['Identifier'] = $Identifier;
+                    $Query = http_build_query($Query);
                     ?>
 
                     <div class="log-row">
-                        <button onclick="window.location.href='/logs-list?<?php echo $Filter ?>';" class="log-identifier" type="button"><?php echo $Identifier ?></button>
+                        <button onclick="window.location.href='/logs-list?<?php echo $Query; ?>';" class="log-identifier" type="button"><?php echo $Identifier ?></button>
                         <div class="log-count">
                             <?php echo count($Lines) ?>
                         </div>
-                        <time class="log-date"> <?php echo $Date.' - '.$Time?></time>
+                        <time class="log-date"> <?php echo $Date.' - '.$Time; ?></time>
                     </div>
 
                     <?php
 
                 } ?>
-                
+
             </div>
 
-            <div class="logs-list-footer">Showing <?php echo count($Logs) ?> log identifiers · Sorted by last modified</div>
+            <div class="logs-list-footer">Showing <?php echo count($Logs); ?> log identifiers · Sorted by last modified</div>
         </div>
     </div>
 </section>
