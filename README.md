@@ -37,6 +37,14 @@ composer run-script --timeout=120 prepare-environment-dev
 PHP_CLI_SERVER_WORKERS=2 php -S localhost:8888 -t ./public/
 ```
 
+### Run all tests
+
+Running this command will **delete all** local databases to initialize the test environment.
+
+```shell
+composer run-script --timeout=120 run-all-tests
+```
+
 ### Clear all application containers
 
 ```shell

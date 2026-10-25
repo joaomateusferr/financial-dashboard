@@ -1,4 +1,6 @@
-/vendor/
+/vendor/*
+/logs/*
+!/logs/.gitkeep
 composer.lock
 .phpunit.cache
 phpunit.xml

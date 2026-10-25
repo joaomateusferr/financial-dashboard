@@ -20,6 +20,9 @@ return function (App $App) {
     //Home
     $App->get('/', [HomeController::class, 'home']);
 
+    $App->get('/logs', [HomeController::class, 'logs']);
+    $App->get('/logs-list', [HomeController::class, 'logsList']);
+
     //UI
     $App->get('/signin', [HomeController::class, 'signin']);
     $App->get('/login', [HomeController::class, 'login']);
