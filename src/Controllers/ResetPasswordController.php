@@ -26,7 +26,7 @@ class ResetPasswordController extends ApiBase {
 
         $UserDetails = UserRepository::retrieveUserDetailsByEmail($Data['Email']);
 
-        if(is_null($UserDetails))
+        if(empty($UserDetails))
             return self::buildResponse($Response, ['Unable to fetch data!'], 500, true);
 
         $Token = ResetPasswordRequestRepository::create($UserDetails['ID']);
