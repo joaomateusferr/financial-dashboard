@@ -155,4 +155,42 @@ class OperationController extends UiBase {
 
     }
 
+    public function startResetPassword(Request $Request, Response $Response){
+
+        $DefaultErrorTitle = 'Error!';
+        $DefaultErrorFooter = 'Do you want to try again? <a href="/start-reset-password">Reset Password</a>';
+
+        $Data = empty($_POST) ? [] : $_POST;
+
+        $Data['Email'] = trim($Data['Email']);
+
+        if(empty($Data['Email']))
+            return self::buildResponse($Response, 'start-reset-password-result.php', ['Title' => $DefaultErrorTitle, 'Description' => 'The email field is mandatory!', 'Footer' => $DefaultErrorFooter]);
+
+        if(!filter_var($Data['Email'], FILTER_VALIDATE_EMAIL))
+            return self::buildResponse($Response, 'start-reset-password-result.php', ['Title' => $DefaultErrorTitle, 'Description' => 'The email field must contain a valid email address!', 'Footer' => $DefaultErrorFooter]);
+
+        $Result = APIRequestHelper::sendRequest($_SERVER['HTTP_USER_AGENT'], 'POST','/reset-password',['Email' => $Data['Email']],["Content-type: application/json"]);
+
+        if($Result === false)
+            $Result = ['error' => true, 'result' => ['Request issue!']];
+
+        if(!empty($Result['error'])){
+
+            $Title = 'Error:';
+            $Description = !empty($Result['result']) ? $Result['result'][0] : '';
+            $Footer = $DefaultErrorFooter;
+
+        } else {
+
+            $Title = 'Success:';
+            $Description = !empty($Result['result']) ? $Result['result'][0] : '';
+            $Footer = 'Do you want to login? <a href="/login">Login</a>';
+
+        }
+
+        return self::buildResponse($Response, 'generic-result.php', ['Title' => $Title, 'Description' => $Description, 'Footer' => $Footer]);
+
+    }
+
 }
