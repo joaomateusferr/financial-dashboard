@@ -24,7 +24,8 @@ class ResetPasswordRequestHelper {
 
     public static function sendResponse(string $Token) : bool {
 
-        Log::add('DEBUG', 'reset-password-request-token', $Token);
+        $Url = $_SERVER['API_BASE_URL'].'/reset-password/'.$Token;
+        Log::add('DEBUG', 'reset-password-request-token', $Url);
         return true;
 
     }
