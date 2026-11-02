@@ -28,7 +28,7 @@ return function (App $App) {
     $App->get('/signin', [HomeController::class, 'signin']);
     $App->get('/login', [HomeController::class, 'login']);
     $App->get('/start-reset-password', [HomeController::class, 'startResetPassword']);
-    $App->get('/reset-password/{ID}', [HomeController::class, 'resetPassword']);
+    $App->get('/reset-password/{Token}', [HomeController::class, 'resetPassword']);
 
     //Operations
     $App->post('/signin/result', [OperationController::class, 'signin']);

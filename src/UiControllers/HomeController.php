@@ -46,8 +46,12 @@ class HomeController extends UiBase {
 
     public function resetPassword(Request $Request, Response $Response, array $Args) {
 
-        $ID = !empty($Args['ID']) ? $Args['ID'] : '';
-        return self::buildResponse($Response, 'reset-password.php', ['ID' => $ID]);
+        $Token = !empty($Args['Token']) ? $Args['Token'] : '';
+
+        if(empty($Token))
+            return self::buildResponse($Response, 'generic-result.php', ['Title' => 'Error:', 'Description' => 'Empty Token!', 'Footer' => 'Do you want to try again? <a href="/start-reset-password">Reset Password</a>']);
+
+        return self::buildResponse($Response, 'reset-password.php', ['ID' => $Token]);
 
     }
 
