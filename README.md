@@ -6,12 +6,12 @@ A simple project that aims to create a dashboard to help automate finances and i
 
 ### Installing python dependencies in ubuntu
 ```shell
-sudo apt-get update && apt-get -y install python3 python3-pip && python3 -m pip install requests yfinance --break-system-packages
+sudo apt-get update && apt-get -y install python3 python3-pip && python3 -m pip install requests yfinance --break-system-packages --ignore-installed
 ```
 
 ### Update yfinance
 ```shell
-sudo python3 -m pip install  yfinance --upgrade --break-system-packages
+sudo python3 -m pip install  yfinance --upgrade --break-system-packages --ignore-installed
 ```
 
 ### Installing PHP dependencies in ubuntu
