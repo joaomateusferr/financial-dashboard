@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use \Exception;
-use App\Services\MariaDB;
+use App\Services\Log;
 use App\Services\Password;
 use App\Repositories\SessionRepository;
 use App\Constants\ServersConstants;
@@ -12,7 +12,7 @@ use App\Helpers\DatabaseHelper;
 
 class UserRepository {
 
-    public static function create(string $Email, string $Password) : bool {
+    public static function create(string $Email, string $Password) : ?bool {
 
         $User = [
             'Email' => $Email,
@@ -28,7 +28,6 @@ class UserRepository {
             if(empty($KernelConnection))
                 return false;
 
-            $KernelConnection = new MariaDB('kernel', 'kernel');
             $Sql = 'INSERT INTO users (Email, PasswordHash, Type, CustomerServerID) VALUES (:Email, :PasswordHash, :Type, :CustomerServerID)';
             $Stmt = $KernelConnection->prepare($Sql);
             $Result = $Stmt->execute($User);
@@ -36,11 +35,10 @@ class UserRepository {
 
         }catch (Exception $Exception){
 
-            //add logs hererws
+            Log::add('ALERT','create-user', $Exception->getMessage());
+            return false;
 
         }
-
-        return false;
 
     }
 
@@ -66,7 +64,7 @@ class UserRepository {
 
         } catch (Exception $Exception){
 
-           //add logs here
+           Log::add('ALERT','create-user', $Exception->getMessage());
            return null;
 
         }
@@ -75,7 +73,7 @@ class UserRepository {
 
     }
 
-    public static function changeUserType(int $ID, string $Type) : bool {
+    public static function changeUserType(int $ID, string $Type) : ?bool {
 
         if(!in_array($Type, UsersConstants::getSupportedTypes()))
             return false;
@@ -87,7 +85,6 @@ class UserRepository {
             if(empty($KernelConnection))
                 return false;
 
-            $KernelConnection = new MariaDB('kernel', 'kernel');
             $Sql = 'UPDATE users SET Type = :Type WHERE ID = :ID';
             $Stmt = $KernelConnection->prepare($Sql);
             $Stmt->bindValue(':Type', $Type);
@@ -99,7 +96,8 @@ class UserRepository {
 
         }catch (Exception $Exception){
 
-            //add logs hererws
+            Log::add('ALERT','change-user-type', $Exception->getMessage());
+            return null;
 
         }
 
@@ -107,7 +105,7 @@ class UserRepository {
 
     }
 
-    public static function changeUserName(int $ID, string $NewName) : bool {
+    public static function changeUserName(int $ID, string $NewName) : ?bool {
 
         try{
 
@@ -127,7 +125,8 @@ class UserRepository {
 
         }catch (Exception $Exception){
 
-            //add logs hererws
+            Log::add('ALERT','change-user-name', $Exception->getMessage());
+            return null;
 
         }
 
@@ -135,14 +134,14 @@ class UserRepository {
 
     }
 
-    public static function changeUserIdentifier(int $ID, string $NewIdentifier) : bool {
+    public static function changeUserIdentifier(int $ID, string $NewIdentifier) : ?bool {
 
         try{
 
             $KernelConnection = DatabaseHelper::getConnection('kernel');
 
             if(empty($KernelConnection))
-                return false;
+                return null;
 
             $Sql = 'UPDATE users SET Identifier = :Identifier WHERE ID = :ID';
             $Stmt = $KernelConnection->prepare($Sql);
@@ -155,7 +154,8 @@ class UserRepository {
 
         }catch (Exception $Exception){
 
-            //add logs hererws
+            Log::add('ALERT','change-user-name', $Exception->getMessage());
+            return null;
 
         }
 
@@ -171,21 +171,21 @@ class UserRepository {
 
     }
 
-    public static function retrieveUserDetailsByID(string $ID, array $Fields = []) : bool | array  {
+    public static function retrieveUserDetailsByID(string $ID, array $Fields = []) : ?array  {
 
         $FieldsString = '*';
 
         if(!empty($Fields))
             $FieldsString = implode(', ', $Fields);
 
-        $UserDetails = false;
+        $UserDetails = [];
 
         try{
 
             $KernelConnection = DatabaseHelper::getConnection('kernel');
 
             if(empty($KernelConnection))
-                return false;
+                return null;
 
             $Sql = "SELECT $FieldsString FROM users WHERE ID = :ID";
             $Stmt = $KernelConnection->prepare($Sql);
@@ -197,7 +197,8 @@ class UserRepository {
 
         } catch (Exception $Exception){
 
-           //add logs here
+           Log::add('ALERT','retrieve-user-details-by-id', $Exception->getMessage());
+           return null;
 
         }
 
