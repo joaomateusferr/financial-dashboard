@@ -6,12 +6,12 @@ A simple project that aims to create a dashboard to help automate finances and i
 
 ### Installing python dependencies in ubuntu
 ```shell
-sudo apt-get update && apt-get -y install python3 python3-pip && python3 -m pip install requests yfinance --break-system-packages
+sudo apt-get update && apt-get -y install python3 python3-pip && python3 -m pip install requests yfinance --break-system-packages --ignore-installed
 ```
 
 ### Update yfinance
 ```shell
-sudo python3 -m pip install  yfinance --upgrade --break-system-packages
+sudo python3 -m pip install  yfinance --upgrade --break-system-packages --ignore-installed
 ```
 
 ### Installing PHP dependencies in ubuntu
@@ -34,7 +34,7 @@ composer run-script --timeout=120 prepare-environment-dev
 ### Start the development server
 
 ```shell
-PHP_CLI_SERVER_WORKERS=2 php -S localhost:8888 -t ./public/
+PHP_CLI_SERVER_WORKERS=2 php -S 0.0.0.0:8888 -t ./public/
 ```
 
 ### Run all tests
