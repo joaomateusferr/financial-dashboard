@@ -48,5 +48,5 @@ composer run-script --timeout=120 run-all-tests
 ### Clear all application containers
 
 ```shell
-composer run-script --timeout=60 environment-clear
+composer run-script --timeout=60 clean-up
 ```
