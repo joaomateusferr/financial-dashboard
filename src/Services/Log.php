@@ -177,6 +177,15 @@ class Log {
 
         }
 
+        uasort($Logs, function(array $FirstChannelLogs, array $SecondChannelLogs): int {
+
+            $FirstDate = $FirstChannelLogs[0]['datetime'] ?? '';
+            $SecondDate = $SecondChannelLogs[0]['datetime'] ?? '';
+
+            return strcmp($SecondDate, $FirstDate);
+
+        });
+
         return $Logs;
 
     }
