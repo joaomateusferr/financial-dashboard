@@ -47,6 +47,7 @@ return function (App $App) {
     $App->get('/api/user', [UserController::class, 'get'])->add(new AuthMiddleware());
     $App->delete('/api/session', [SessionController::class, 'delete'])->add(new AuthMiddleware());
     $App->post('/api/reset-password', [ResetPasswordController::class, 'create']);
+    $App->get('/api/reset-password', [ResetPasswordController::class, 'get']);
     $App->post('/api/common-information/exchange-traded-assets', [ExchangeTradedAssetsController::class, 'create'])->add(new AuthMiddleware());
     $App->get('/api/common-information/exchange-traded-assets', [ExchangeTradedAssetsController::class, 'get']);
     $App->get('/api/common-information/asset-qualification', [AssetQualificationController::class, 'get']);

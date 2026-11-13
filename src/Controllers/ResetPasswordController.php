@@ -47,10 +47,26 @@ class ResetPasswordController extends ApiBase {
 
     public function get(Request $Request, Response $Response) {
 
-        /*DatabaseHelper::connect('kernel', 'kernel');
-        $UserData = UserRepository::retrieveUserDetailsBySID($_COOKIE['sid']);
+        $Data = self::formatBody($Request->getBody()->getContents());
+
+        if(!isset($Data['Token']))
+            return self::buildResponse($Response, ['Token field is mandatory!'], 400, true);
+
+        DatabaseHelper::connect('kernel', 'kernel');
+
+        $UserID = ResetPasswordRequestRepository::getUserID($Data['Token']);
+
+        if(empty($UserID))
+            return self::buildResponse($Response, ['Unable to fetch token data!'], 500, true);
+
+        $UserDetails = UserRepository::retrieveUserDetailsByID($UserID, ['Email']);
+
+        if(empty($UserDetails))
+            return self::buildResponse($Response, ['Unable to fetch user data!'], 500, true);
+
         DatabaseHelper::disconnect('kernel');
-        return self::buildResponse($Response, $UserData);*/
+
+        return self::buildResponse($Response, $UserDetails);
 
     }
 
