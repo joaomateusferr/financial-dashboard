@@ -9,15 +9,11 @@ class EmailHelper {
 
     public static function buildProvider() : Provider {
 
-        $Environment = 'DEV';
-
-        if($Environment == 'DEV' || $Environment == 'CLI' )
-            return new Provider('localhost', 1025);
-
-
-        $User = 'user';
-        $Password = 'password';
-        return new Provider('smtp.gmail.com', 465, $User, $Password);
+        $Host = $_SERVER['EMAIL_SERVICE_HOST'];
+        $Port = $_SERVER['EMAIL_SERVICE_PORT'];
+        $User = !empty($_SERVER['EMAIL_SERVICE_USER']) ? $_SERVER['EMAIL_SERVICE_USER'] : null;
+        $Password = !empty($_SERVER['EMAIL_SERVICE_PASSWORD']) ? $_SERVER['EMAIL_SERVICE_PASSWORD'] : null;
+        return new Provider($Host, $Port, $User, $Password);
 
     }
 

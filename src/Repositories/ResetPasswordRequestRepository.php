@@ -41,4 +41,34 @@ class ResetPasswordRequestRepository {
 
     }
 
+    public static function getUserID(string $Token) : ?int {
+
+        try {
+
+            $KernelConnection = DatabaseHelper::getConnection('kernel');
+
+            if(empty($KernelConnection))
+                return null;
+
+            $Sql = 'SELECT UserID FROM reset_password_requests WHERE Token = :Token';
+            $Stmt = $KernelConnection->prepare($Sql);
+            $Stmt->bindValue(':Token', $Token);
+            $Result = $Stmt->execute();
+
+
+            if($Result && $Stmt->rowCount() > 0)
+                return $Stmt->fetch()['UserID'];
+
+
+        } catch (Exception $Exception) {
+
+            Log::add('ALERT','get-reset-password-request', $Exception->getMessage());
+            return null;
+
+        }
+
+        return null;
+
+    }
+
 }

@@ -7,7 +7,7 @@ use App\Services\Log;
 
 class ResetPasswordRequestHelper {
 
-    private const StandardDuration = 1800; //30 mins
+    private const StandardDuration = 600; //10 mins
 
 
     public static function generateToken() : string {

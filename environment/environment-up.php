@@ -6,7 +6,7 @@ use Composer\Autoload\ClassLoader;
 
 $Mode = isset($argv[1]) ? $argv[1] : 'CI';
 
-$SupportedModes = ['CI', 'DEV'];
+$SupportedModes = ['CI', 'DEV', 'PROD'];
 $DatabaseNetwork = 'network-db';
 $DatabaseNetworkAlias = 'db';
 
@@ -41,13 +41,28 @@ if(!empty($ResultCode) || !isset($Output[0]))
 $DatabaseHost = empty($Output[0]) ? $DatabaseNetworkAlias : trim($Output[0]);
 $DatabasePort = 3306;
 
-$Output = [];
-$ResultCode = 0;
+$EmailServiceHost = '';
+$EmailServicePort = '';
+$EmailServiceUser = '';
+$EmailServicePassword = '';
 
-exec("docker run --name mailcatcher -d -p 1080:1080 -p 1025:1025 sj26/mailcatcher", $Output, $ResultCode);
+if($Mode != 'PROD'){
 
-if(!empty($ResultCode))
-    exit(4);    //Unable to run mailcatcher container
+    $EmailServiceHost = $DatabaseHost;
+    $EmailServicePort = '1025';
+
+    $MailCatcherApiPort = '1080';
+    $MailCatcherApiUrl = "http://$EmailServiceHost:$MailCatcherApiPort";
+
+    $Output = [];
+    $ResultCode = 0;
+
+    exec("docker run --name mailcatcher -d -p $MailCatcherApiPort:$MailCatcherApiPort -p $EmailServicePort:$EmailServicePort sj26/mailcatcher", $Output, $ResultCode);
+
+    if(!empty($ResultCode))
+        exit(4);    //Unable to run mailcatcher container
+
+}
 
 $Output = [];
 $ResultCode = 0;
@@ -117,7 +132,14 @@ $EnvVariables = [
     'API_BASE_URL' => 'http://localhost:8888', //default value for the development environment
     'UI_API_REQUEST_TIMEOUT' => 5,
     'LOG_FILES_PATH' => '/logs',
+    'EMAIL_SERVICE_HOST' => $EmailServiceHost,
+    'EMAIL_SERVICE_PORT' => $EmailServicePort,
+    'EMAIL_SERVICE_USER' => $EmailServiceUser,
+    'EMAIL_SERVICE_PASSWORD' => $EmailServicePassword,
 ];
+
+if(!empty($MailCatcherApiUrl))
+    $EnvVariables['MAIL_CATCHER_API_URL'] = $MailCatcherApiUrl;
 
 $EnvContent = '';
 
