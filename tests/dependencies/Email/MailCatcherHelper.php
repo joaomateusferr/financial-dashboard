@@ -53,6 +53,68 @@ class MailCatcherHelper {
 
                 $Body = trim($Body);
 
+                if($Format == 'source'){
+
+                    $Lines = explode("\n", $Body);
+
+                    foreach($Lines as $LinesIndex => $Line){
+
+                        $Lines[$LinesIndex] = trim($Line);
+
+                    }
+
+                    $ToResult = [];
+                    $FromResult = [];
+
+                    $To = $Lines[1];
+                    $From = $Lines[2];
+
+                    $Tokens = explode(":", $From);
+                    $Token = trim($Tokens[1]);
+                    $FromContent = explode(" <", $Token);
+
+                    if(count($FromContent) != 2)
+                        continue;
+
+                    $Key = trim($FromContent[1]);
+                    $Key = str_replace('>', '', $Key);
+                    $FromResult = [$Key => trim($FromContent[0])];
+
+                    if(!empty($FromResult)){
+
+                        $Content[$Index]['alias'] = [];
+                        $Content[$Index]['alias']['from'] = $FromResult;
+
+                    }
+
+                    $Tokens = explode(":", $To);
+                    $Tokens = trim($Tokens[1]);
+                    $Tokens = explode(",", $Tokens);
+
+                    foreach($Tokens as $TokensIndex => $Token){
+
+                        $ToContent = explode(" <", $Token);
+
+                        if(count($ToContent) != 2)
+                            continue;
+
+                        $Key = trim($ToContent[1]);
+                        $Key = str_replace('>', '', $Key);
+                        $ToResult[$Key] = trim($ToContent[0]);
+
+                    }
+
+                    if(!empty($ToResult)){
+
+                        if(!isset($Content[$Index]['alias']))
+                            $Content[$Index]['alias'] = [];
+
+                        $Content[$Index]['alias']['to'] = $ToResult;
+
+                    }
+
+                }
+
                 $Content[$Index]['content'][$Format] = $Body;
 
             }
