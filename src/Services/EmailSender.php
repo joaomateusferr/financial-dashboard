@@ -11,13 +11,13 @@ use PHPMailer\PHPMailer\PHPMailer;
 class EmailSender {
 
     private Provider $Provider;
-    private string $Sender;
+    private string | array $Sender;
     private array $Recipients;
     private Content $Content;
     private ?SMime $SMime;
     private string $XMailer;
 
-    public function __construct(Provider $Provider, string $Sender, array $Recipients, Content $Content, ?SMime $SMime = null, string $XMailer = ' ') {
+    public function __construct(Provider $Provider, string | array $Sender, array $Recipients, Content $Content, ?SMime $SMime = null, string $XMailer = ' ') {
 
         $this->Provider = $Provider;
         $this->Sender = $Sender;
@@ -72,8 +72,10 @@ class EmailSender {
 
         //Sender
 
-        $Mailer->setFrom($this->Sender);
-
+        if(is_string($this->Sender))
+            $Mailer->setFrom($this->Sender);
+        else
+            $Mailer->setFrom($this->Sender['Email'], $this->Sender['Name']);
 
         //XMailer
 
@@ -88,7 +90,12 @@ class EmailSender {
         $Mailer = $this->buildMailer();
 
         foreach($this->Recipients as $Recipient){
-            $Mailer->addAddress($Recipient);
+
+            if(is_string($Recipient))
+                $Mailer->addAddress($Recipient);
+            else
+                $Mailer->addAddress($Recipient['Email'],$Recipient['Name']);
+
         }
 
         $Mailer->send();
@@ -100,7 +107,12 @@ class EmailSender {
         foreach($this->Recipients as $Recipient){
 
             $Mailer = $this->buildMailer();
-            $Mailer->addAddress($Recipient);
+
+            if(is_string($Recipient))
+                $Mailer->addAddress($Recipient);
+            else
+                $Mailer->addAddress($Recipient['Email'],$Recipient['Name']);
+
             $Mailer->send();
 
         }
