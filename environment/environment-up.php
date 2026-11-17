@@ -41,12 +41,16 @@ if(!empty($ResultCode) || !isset($Output[0]))
 $DatabaseHost = empty($Output[0]) ? $DatabaseNetworkAlias : trim($Output[0]);
 $DatabasePort = 3306;
 
+$Domain = '';
+
 $EmailServiceHost = '';
 $EmailServicePort = '';
 $EmailServiceUser = '';
 $EmailServicePassword = '';
 
 if($Mode != 'PROD'){
+
+    $Domain = 'test.io';
 
     $EmailServiceHost = $DatabaseHost;
     $EmailServicePort = '1025';
@@ -120,6 +124,7 @@ if(!empty($ResultCode) || !isset($Output[0]))
 $JwtKey = trim($Output[0]);
 
 $EnvVariables = [
+    'DOMAIN' => $Domain,
     'KERNEL_DB_HOST' => $DatabaseHost,
     'KERNEL_DB_PORT' => $DatabasePort,
     'COMMON_INFORMATION_DB_HOST' => $DatabaseHost,
