@@ -26,4 +26,10 @@ class UsersConstants {
 
     }
 
+    public static function getDefaultContactEmail() : string {
+
+        return 'contact@'.$_SERVER['DOMAIN'];
+
+    }
+
 }
